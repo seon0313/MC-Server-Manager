@@ -1,12 +1,12 @@
 from src.ServerParcer.Parcer import ParcerItem
 from src.ServerParcer import OriginalParcer
+from src.ProcessManager.router import make_router
 import uuid
 from fastapi import FastAPI
 from pathlib import Path
 import uvicorn
 from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
 import os
-import uuid
 import json
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -16,6 +16,7 @@ app = FastAPI(
     version="1.0.0",
 )
 app.add_middleware(ProxyHeadersMiddleware, trusted_hosts="*")
+app.include_router(make_router(BASE_DIR), prefix='/api/v1')
 
 
 
