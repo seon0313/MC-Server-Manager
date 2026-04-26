@@ -32,7 +32,7 @@ class OriginalParcer(Parcer):
         with open(val.server_dir / 'eula.txt', 'w') as f:
             f.write('eula=true\n')
         with open(val.server_dir / 'run.sh', 'w') as f:
-            f.write(f'#!/bin/bash\njava -Xms2048m -Xmx2048m -jar {val.server_dir}/server.jar nogui\n')
+            f.write('#!/bin/bash\njava -Xms2048m -Xmx2048m -jar server.jar nogui\n')
 
     def download(self, version, path):
         print(f'[downloader] {version} start')
