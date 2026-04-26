@@ -1,8 +1,10 @@
 from src.ServerParcer.Parcer import ParcerItem
 from src.ServerParcer import OriginalParcer
 from src.ProcessManager.router import make_router
+from src.ProcessManager import manager
 import uuid
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pathlib import Path
 import uvicorn
 from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
@@ -16,6 +18,7 @@ app = FastAPI(
     version="1.0.0",
 )
 app.add_middleware(ProxyHeadersMiddleware, trusted_hosts="*")
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 app.include_router(make_router(BASE_DIR), prefix='/api/v1')
 
 
@@ -54,7 +57,7 @@ def get_server_list(auth: str):
                         q,w,e,t,y = a['uuid'], a['version'], a['name'], a['server_type'], a['auth']
 
                         if y == auth:
-                            r.append({'uuid': q, 'version': w, 'name': e, 'server_type': t, 'auth': y})
+                            r.append({'uuid': q, 'version': w, 'name': e, 'server_type': t, 'auth': y, 'running': manager.is_running(q)})
 
         except Exception as e: print(e)
     return {'status': True, 'data': r}
