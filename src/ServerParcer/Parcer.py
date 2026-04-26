@@ -3,12 +3,13 @@ from enum import Enum
 import requests
 
 class ParcerItem:
-    def __init__(self, server_dir, uid, name, type_, version):
+    def __init__(self, server_dir, uid, name, type_, version, auth):
         self.server_dir = server_dir
         self.uid = uid
         self.name = name
         self.type_ = type_
         self.version = version
+        self.auth = auth
 
 class Parcer:
     def __init__(self):

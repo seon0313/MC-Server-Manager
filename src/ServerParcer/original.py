@@ -24,7 +24,8 @@ class OriginalParcer(Parcer):
                 f'   "uuid": "{val.uid}",\n',
                 f'  "version": "{val.version}",\n',
                 f'  "name": "{val.name}",\n'
-                f'  "server_type": "{val.type_}"\n'
+                f'  "server_type": "{val.type_}",\n'
+                f'  "auth": "{val.auth}"\n'
                 '}'
             ])
     def createScript(self, val: ParcerItem):
