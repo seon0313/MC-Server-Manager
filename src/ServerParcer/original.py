@@ -1,5 +1,5 @@
 import requests
-from .Parcer import Parcer
+from .Parcer import Parcer, ParcerItem
 
 class OriginalParcer(Parcer):
     def __init__(self):
@@ -16,6 +16,20 @@ class OriginalParcer(Parcer):
             if i['type'] == 'release':
                 releases.append(i['id'])
         return {'status': True,'latest': latest, 'releases': releases}
+    
+    def createStatus(self, val: ParcerItem):
+        with open(val.server_dir / 'status.json' ,'w') as f:
+            f.writelines([
+                '{\n',
+                f'   "uuid": "{val.uid}",\n',
+                f'  "version": "{val.version}",\n',
+                f'  "name": "{val.name}",\n'
+                f'  "server_type": "{val.type_}"\n'
+                '}'
+            ])
+    def createScript(self, val: ParcerItem):
+        with open(val.server_dir / 'run.sh', 'w') as f:
+            f.write(f'java -Xms2048m -Xmx2048m -jar {val.server_dir}/server.jar')
 
     def download(self, version, path):
         print(f'[downloader] {version} start')
