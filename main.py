@@ -57,7 +57,7 @@ def get_server_list(auth: str):
                         q,w,e,t,y = a['uuid'], a['version'], a['name'], a['server_type'], a['auth']
 
                         if y == auth:
-                            r.append({'uuid': q, 'version': w, 'name': e, 'server_type': t, 'auth': y, 'running': manager.is_running(q)})
+                            r.append({'uuid': q, 'version': w, 'name': e, 'server_type': t, 'auth': y, 'domain': a.get('domain', ''), 'running': manager.is_running(q)})
 
         except Exception as e: print(e)
     return {'status': True, 'data': r}

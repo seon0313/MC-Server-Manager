@@ -1,5 +1,11 @@
+import json
 import requests
 from .Parcer import Parcer, ParcerItem
+
+DOMAIN_MAP = {
+    'S': 'mcseoul.seon06.dev',
+    'B': 'mcbusan.seon06.dev',
+}
 
 class OriginalParcer(Parcer):
     def __init__(self):
@@ -18,22 +24,27 @@ class OriginalParcer(Parcer):
         return {'status': True,'latest': latest, 'releases': releases}
     
     def createStatus(self, val: ParcerItem):
-        with open(val.server_dir / 'status.json' ,'w') as f:
-            f.writelines([
-                '{\n',
-                f'   "uuid": "{val.uid}",\n',
-                f'  "version": "{val.version}",\n',
-                f'  "name": "{val.name}",\n'
-                f'  "server_type": "{val.type_}",\n'
-                f'  "auth": "{val.auth}"\n'
-                '}'
-            ])
+        domain = DOMAIN_MAP.get(val.auth[0].upper(), '')
+        status = {
+            'uuid': val.uid,
+            'version': val.version,
+            'name': val.name,
+            'server_type': val.type_,
+            'auth': val.auth,
+            'domain': domain,
+        }
+        (val.server_dir / 'status.json').write_text(json.dumps(status, indent=2))
     def createScript(self, val: ParcerItem):
         port = 25565 if val.auth.startswith('S') else 25566
+        rcon_port = port + 10
         with open(val.server_dir / 'eula.txt', 'w') as f:
             f.write('eula=true\n')
         with open(val.server_dir / 'server.properties', 'w') as f:
-            f.write(f'server-port={port}\n')
+            f.write(
+                f'server-port={port}\n'
+                f'query.port={port}\n'
+                f'rcon.port={rcon_port}\n'
+            )
         with open(val.server_dir / 'run.sh', 'w') as f:
             f.write('#!/bin/bash\njava -Xms2048m -Xmx2048m -jar server.jar nogui\n')
 
