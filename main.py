@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from pathlib import Path
 from src.ServerParcer.original import OriginalParcer
 import uvicorn
+from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
 import os
 import uuid
 
@@ -12,6 +13,7 @@ app = FastAPI(
     title='MC API',
     version="1.0.0",
 )
+app.add_middleware(ProxyHeadersMiddleware, trusted_hosts="*")
 
 
 
