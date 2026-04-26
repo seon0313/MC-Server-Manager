@@ -64,6 +64,13 @@ class ProcessManager:
         asyncio.create_task(server_proc._read_output())
         asyncio.create_task(self._monitor(uuid, auth, process))
 
+        await asyncio.sleep(2)
+        if process.returncode is not None:
+            self._processes.pop(uuid, None)
+            self._auth_to_uuid.pop(auth, None)
+            output = '\n'.join(list(server_proc.output_buffer)[-10:])
+            return {'status': False, 'msg': f'서버가 즉시 종료됨: {output}'}
+
         return {'status': True, 'msg': '서버를 시작했습니다'}
 
     async def _monitor(self, uuid: str, auth: str, process: asyncio.subprocess.Process):
