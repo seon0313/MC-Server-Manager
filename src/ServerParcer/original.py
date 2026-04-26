@@ -29,8 +29,11 @@ class OriginalParcer(Parcer):
                 '}'
             ])
     def createScript(self, val: ParcerItem):
+        port = 25565 if val.auth.startswith('S') else 25566
         with open(val.server_dir / 'eula.txt', 'w') as f:
             f.write('eula=true\n')
+        with open(val.server_dir / 'server.properties', 'w') as f:
+            f.write(f'server-port={port}\n')
         with open(val.server_dir / 'run.sh', 'w') as f:
             f.write('#!/bin/bash\njava -Xms2048m -Xmx2048m -jar server.jar nogui\n')
 
